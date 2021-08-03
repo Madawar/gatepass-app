@@ -54,6 +54,7 @@ class GatePass extends Component
 
     public function savePass()
     {
+        /*
         dd($this->items);
         //dd($this->name_of_requester);
         $this->validate();
@@ -71,7 +72,7 @@ class GatePass extends Component
         dd($gatePassItems);
         $pass->items()->saveMany($gatePassItems);
 
-
+*/
 
         $pdf = PDF::loadView('gatepass', []);
         return $pdf->save('test.pdf');
