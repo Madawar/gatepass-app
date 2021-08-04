@@ -6,8 +6,8 @@
 
         body,
         html {
-            font-size: 13px;
-            line-height: 1.33;
+            font-size: 18px;
+            line-height: 2;
             background-color: none;
             background: none
         }
@@ -19,7 +19,7 @@
         * {
             margin: 0;
             padding: 0;
-            font-size: 1em;
+            font-size: 1.5em;
             line-height: normal;
             color: #000;
             font-family: -apple-system, BlinkMacSystemFont, 'San Francisco', 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
@@ -526,6 +526,7 @@
                 .printer-preview-content .t36045 th.order-table-qty {
                     width: 10%;
                 }
+
                 .printer-preview-content .t36045 th.order-table-sign {
                     width: 30%;
                 }
@@ -799,28 +800,33 @@
                             </div>
                             <ul class='order-details'>
                                 <li class='order-details-invoice'>
-                                    <span class='order-details-title editable' data-key='invoice_number'>Pass No :</span>
-                                    <span class='order-details-text'>#9999</span>
+                                    <span class='order-details-title editable' data-key='invoice_number'>Pass No
+                                        :</span>
+                                    <span class='order-details-text'>#{{$pass->id}} /  {{asset('logo.png')}}</span>
                                 </li>
                                 <li class='order-details-date'>
                                     <span class='order-details-title editable' data-key='date'>Date Created :</span>
-                                    <span class='order-details-text'>01-03-2019</span>
+                                    <span
+                                        class='order-details-text'>{{ Carbon\Carbon::parse($pass->gate_pass_date)->format('j-M-y') }}</span>
                                 </li>
                                 <li class='order-details-payment'>
-                                    <span class='order-details-title editable' data-key='payment_method'>Pass Type :</span>
+                                    <span class='order-details-title editable' data-key='payment_method'>Pass Type
+                                        :</span>
                                     <span class='order-details-text'>Autre</span>
                                 </li>
 
                                 <li class='order-details-shipping'>
-                                    <span class='order-details-title editable' data-key='shipping_method'>Date of Return :</span>
-                                    <span class='order-details-text'>Generic Shipping</span>
+                                    <span class='order-details-title editable' data-key='shipping_method'>Date of Return
+                                        :</span>
+                                    <span class='order-details-text'></span>
                                 </li>
                             </ul>
                         </div>
                         <div class='col-xs-6 col-no-margin'>
                             <div class='logo-wrapper'>
+
                                 <img class='logo' alt='Logo'
-                                    src='https://d1sv15muvzgtp9.cloudfront.net/api/file/03dmPHx9TAu9YQawyyT.png'>
+                                    src='{{asset('logo.png')}}'>
                             </div>
                         </div>
                     </div>
@@ -834,14 +840,8 @@
                     <div class='col-xs-4'>
                         <ul class='address'>
 
-                            <li>Bob BILLER</li>
-                            <li>My Company</li>
-                            <li>123 Billing Street</li>
-                            <li></li>
-                            <li>K2P0B0 Billtown</li>
-                            <li>United States</li>
-
-
+                            <li>{{ $pass->name_of_requester }}</li>
+                            <li>{{ $pass->vehicle_registration }}</li>
                         </ul>
                     </div>
 
@@ -851,55 +851,56 @@
                         <table class='order-table table'>
                             <thead>
                                 <tr>
-                                    <th  class='order-table-title editable' data-key='item'>Item</th>
+                                    <th class='order-table-title editable' data-key='item'>Item</th>
                                     <th class='order-table-qty text-center editable' data-key='qty'>Quantity</th>
 
                                 </tr>
                             </thead>
                             <tbody>
+                                @foreach ($pass->items as $item)
+                                    <tr>
+                                        <td class='line-item-description'>
+                                            <p style='font-weight: bold;'>
+                                                {{$item->item_description}} </p>
 
-                                <tr>
-                                    <td class='line-item-description'>
-                                        <p style='font-weight: bold;'>
-                                            PRODUCT DESC - </p>
-
-                                        <p class='line-item-sku'>SKU Long Text Ecxamaplrnc dssdfff</p>
-
-
-                                    </td>
-                                    <td class='text-center line-item-qty'>× 1</td>
+                                            <p class='line-item-sku'> <i>Serial</i> : {{$item->serial}} </p>
 
 
-                                </tr>
+                                        </td>
+                                        <td class='text-center line-item-qty'>×  {{$item->qty}}</td>
+
+
+                                    </tr>
+
+                                @endforeach
+
 
 
                             </tbody>
                         </table>
                     </div>
                 </div>
-                <div class='row' style="margin-top: 30px">
+                <div class='row' style="margin-top: 50px">
 
                     <div class='col-xs-12'>
                         <table class='order-table  table'>
                             <thead>
                                 <tr>
-                                    <th  class='order-table-sign editable' data-key='item'>Signatory</th>
-                                    <th class='order-table-title text-center editable' data-key='qty'>Name</th>
+                                    <th class='order-table-sign editable' data-key='item'>Signatory</th>
+                                    <th class='order-table-title  editable' data-key='qty'>Name</th>
                                     <th class='order-table-sign text-center editable' data-key='qty'>Signature</th>
 
                                 </tr>
                             </thead>
                             <tbody>
+                                @foreach ($pass->signatories as $sign)
                                 <tr>
-                                    <td class='' >Prepared By : </td>
-                                    <td class=''>Dennis Wanyoike</td>
+                                    <td class=''>{{$sign->level}} : </td>
+                                    <td class=''>{{$sign->name}}</td>
                                     <td class=''></td>
                                 </tr>
-                                <tr>
-                                    <td class='' >Checked By : </td>
-                                    <td class=''>Alex Warui</td>
-                                    <td class=''></td>
-                                </tr>
+                                @endforeach
+
                             </tbody>
                         </table>
                     </div>

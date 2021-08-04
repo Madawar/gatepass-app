@@ -3,6 +3,7 @@
 namespace App\Http\Livewire\GatePass;
 
 use App\Models\GatePass as Pass;
+use App\Models\GatePassAuthorizer;
 use App\Models\GatePassItem;
 use Carbon\Carbon;
 use Livewire\Component;
@@ -54,8 +55,9 @@ class GatePass extends Component
 
     public function savePass()
     {
-        /*
-        dd($this->items);
+        //  dd($this->items);
+
+
         //dd($this->name_of_requester);
         $this->validate();
         $pass =  Pass::create(array(
@@ -65,16 +67,25 @@ class GatePass extends Component
             'vehicle_registration' => $this->vehicle_registration,
             'purpose_of_pass' => $this->purpose_of_pass,
         ));
+        //Items
         $gatePassItems = [];
         foreach ($this->items as $item) {
             $gatePassItems[] = new GatePassItem($item);
         }
-        dd($gatePassItems);
         $pass->items()->saveMany($gatePassItems);
 
-*/
+        //signatories
+        $authorizers = [];
+        foreach ($this->authorizations as $item) {
+            $authorizers[] = new GatePassAuthorizer($item);
+        }
+        $pass->signatories()->saveMany($authorizers);
 
-        $pdf = PDF::loadView('gatepass', []);
-        return $pdf->save('test.pdf');
+        $pass = Pass::with('signatories', 'items')->find($pass->id);
+        $pdf = PDF::setOptions(['isHtml5ParserEnabled' => true, 'isRemoteEnabled' => true])->loadView('gatepass', compact('pass'))->output();
+        return response()->streamDownload(
+            fn () => print($pdf),
+            "GatePass.pdf"
+       );
     }
 }

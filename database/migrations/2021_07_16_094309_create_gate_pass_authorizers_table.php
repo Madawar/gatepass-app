@@ -21,7 +21,7 @@ class CreateGatePassAuthorizersTable extends Migration
             $table->date('authorized_on')->nullable();
             $table->boolean('authorized')->default(0);
             $table->softDeletes();
-            $table->foreignId('gate_passes_id')->constrained()->onUpdate('cascade')->onDelete('cascade');;
+            $table->foreignId('gate_pass_id')->constrained()->onUpdate('cascade')->onDelete('cascade');;
             $table->timestamps();
         });
     }

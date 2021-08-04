@@ -34,6 +34,11 @@ class GatePass extends Model
         return $this->hasMany(GatePassItem::class);
     }
 
+    public function signatories()
+    {
+        return $this->hasMany(GatePassAuthorizer::class);
+    }
+
 
 
 }
